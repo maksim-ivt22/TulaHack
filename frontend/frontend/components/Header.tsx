@@ -10,7 +10,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ currentUser }) => {
     const router = useRouter();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // Для гамбургер-меню
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleDashboardClick = () => {
         router.push("/dashboard");
@@ -36,7 +36,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
     };
 
     const handleWelClick = () => {
-        router.push("/welcome");
+        router.push("/");
         setIsMenuOpen(false);
     };
 
@@ -52,7 +52,8 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
     };
 
     const handleLoginClick = () => {
-        router.push("/");
+        console.log("Navigating to login page (/login)");
+        router.push("/login");
         setIsMenuOpen(false);
     };
 
@@ -74,21 +75,18 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
     };
 
     return (
-        <header className="text-black p-2 md:p-4">
+        <header className="text-black p-2 md:p-4 bg-[#FFFFFF]">
             <div className="container mx-auto flex items-center justify-between">
-                {/* Логотип */}
                 <div onClick={handleWelClick} className="cursor-pointer">
                     <span className="text-lg md:text-[24px] font-bold mon">ПомощьРядом</span>
                 </div>
 
-                {/* Гамбургер-меню для мобильных */}
                 <div className="md:hidden">
                     <button onClick={toggleMenu} className="text-2xl focus:outline-none">
                         {isMenuOpen ? "✕" : "☰"}
                     </button>
                 </div>
 
-                {/* Кнопки для десктопа */}
                 <div className="hidden md:flex items-center space-x-4">
                     {currentUser && (
                         <>
@@ -136,7 +134,6 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
                 </div>
             </div>
 
-            {/* Мобильное меню */}
             {isMenuOpen && (
                 <div className="md:hidden bg-white shadow-lg mt-2 p-4 rounded-lg">
                     <div className="flex flex-col space-y-2">
@@ -155,7 +152,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
                                     className="text-base text-left p-2 rounded hover:bg-gray-100"
                                 >
                                     Список сотрудника
-                                </button>
+                                    </button>
                             </>
                         )}
                         {currentUser ? (
@@ -185,7 +182,6 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
                 </div>
             )}
 
-            {/* Модальное окно профиля */}
             {isModalOpen && currentUser && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
