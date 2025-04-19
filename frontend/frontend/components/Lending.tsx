@@ -31,7 +31,7 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
     return (
         <div className="min-h-screen bg-[#F8F8F8]">
             {/* Header */}
-            <Header currentUser={currentUser} />
+
 
             {/* Hero Section */}
             <section className="py-2 flex flex-col md:flex-row">
@@ -76,14 +76,14 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
                                     <p className="mb-2 text-lg md:text-[24px] font-medium">Помощь с переездом</p>
                                     <p className="mb-2">{request.date}</p>
                                     <div className="flex flex-wrap gap-2">
-                                        <p className="text-[#606278] mb-4 bg-[#D6FFE1] py-1 px-3 rounded-[8px] flex items-center">
+                                        <div className="text-[#606278] mb-4 bg-[#D6FFE1] py-1 px-3 rounded-[8px] flex items-center">
                                             <div className="h-4 w-4 md:h-5 md:w-5 my-auto rounded-full bg-gray-200 mr-2"></div>
-                                            {request.status}
-                                        </p>
-                                        <p className="text-[#606278] mb-4 bg-[#D6FFE1] py-1 px-3 rounded-[8px] flex items-center">
+                                            <span>{request.status}</span>
+                                        </div>
+                                        <div className="text-[#606278] mb-4 bg-[#D6FFE1] py-1 px-3 rounded-[8px] flex items-center">
                                             <div className="h-4 w-4 md:h-5 md:w-5 my-auto rounded-full bg-gray-200 mr-2"></div>
-                                            {request.status2}
-                                        </p>
+                                            <span>{request.status2}</span>
+                                        </div>
                                     </div>
                                     <button className="bg-[#5DBA32] w-full md:w-[45%] text-white px-4 py-2 md:py-3 rounded-[12px] hover:bg-green-600">
                                         {request.action}

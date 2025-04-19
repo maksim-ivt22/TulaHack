@@ -1,102 +1,85 @@
-import { useState, useEffect } from "react";
-import { login } from "../lib/auth";
+import { useState } from "react";
 import { useRouter } from "next/router";
-import { isAuthenticated } from "../lib/auth";
-import "../styles/globals.css";
 
 const LoginForm: React.FC = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState<string | null>(null);
-    const [attempts, setAttempts] = useState(0);
     const router = useRouter();
+    const [phone, setPhone] = useState("");
+    const [password, setPassword] = useState("");
+    const [showSuccess, setShowSuccess] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    // сделай логику ну тут самое главное 
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        if (attempts >= 3) {
-            setError("Account locked due to too many attempts");
-            return;
-        }
 
-        try {
-            console.log("Attempting login with email:", email, "and password:", password);
-            const loginResponse = await login(email, password);
-            console.log("Login successful, token:", loginResponse.access_token);
-            console.log("Redirecting to dashboard via router.push");
-            await router.push("/welcome");
-        } catch (err: any) {
-            console.error("Login error:", err);
-            const newAttempts = attempts + 1;
-            setAttempts(newAttempts);
-            setError(
-                newAttempts >= 3
-                    ? "Account locked due to too many attempts"
-                    : err.response?.data?.detail || "Login failed"
-            );
-        }
+        console.log("Login data:", { phone, password });
+        setShowSuccess(true);
+
+        setTimeout(() => {
+            router.push("/welcome");
+        }, 2000);
     };
 
-    // Проверка токена после монтирования компонента
-    useEffect(() => {
-        console.log("Checking authentication on mount");
-        if (isAuthenticated()) {
-            console.log("User is authenticated, redirecting to dashboard");
-            router.push("/dashboard");
-        }
-    }, []);
+    if (showSuccess) {
+        return (
+            <div className="flex flex-col items-center justify-center bg-white p-6 rounded-lg shadow-lg">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                    <svg className="w-8 h-8 text-green-500" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                    </svg>
+                </div>
+                <h2 className="text-xl font-bold text-gray-800 mb-2">Успешно!</h2>
+                <p className="text-sm text-gray-600">Перейти на главную</p>
+            </div>
+        );
+    }
 
     return (
-        <div className="h-screen flex items-center justify-center relative bg-white">
-
-
-            <form onSubmit={handleSubmit} className="h-screen bg-white rounded mr-auto  w-[49%] flex ">
-                <div className="h-[30%] my-auto w-[40%] mx-auto">
-                    <h1 className="text-5xl font-bold">Авторизация</h1>
-                    <div className="w-full mx-auto mt-10">
+        <div className="flex flex-col items-center justify-center h-[90vh]">
+            <div className="bg-white p-6 rounded-[32px] w-full max-w-md">
+                <h1 className="text-[24px] font-bold text-gray-800 mb-6 text-center font-mono mon">ПомощьРядом</h1>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
                         <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full h-12 border rounded-[20] p-4 bg-[#EBEBEB] text-xl"
+                            type="string"
+                            placeholder="Номер телефона"
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full p-3 bg-[#F8F8F8] rounded-[16px] text-[#999DA6] focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
-
                     </div>
-                    <div className="w-full mx-auto mt-5">
+                    <div>
                         <input
                             type="password"
+                            placeholder="Пароль"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full h-12 border rounded-[20] p-4 bg-[#EBEBEB] text-xl"
+                            className="w-full p-3 bg-[#F8F8F8] rounded-[16px] text-[#999DA6] focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
                     </div>
-                    {error && <p className="text-red-500 mb-4 text-xl">{error}</p>}
-                    <p className="text-[#3314F1] mt-5">Забыли пароль?</p>
                     <button
                         type="submit"
-                        disabled={attempts >= 3}
-                        className="h-20 mt-5 bg-[#3314F1] text-white p-2 rounded-[20] hover:bg-blue-600 disabled:bg-gray-400 w-full text-xl"
+                        className="w-full p-3 bg-[#F8F8F8] text-[#999DA6] rounded-[16px] hover:bg-gray-200"
                     >
                         Войти
                     </button>
-                </div>
-            </form>
-
-
-            <div className="w-[49%] mr-auto h-[96%] rounded-3xl diagonal-gradient">
-                <div className=" inset-0 overflow-hidden">
-                    <div className="absolute w-[593.96px] h-[429.67px] ml-[5%] fi4 rounded-full animate-breathe-up-down delay-4"></div>
-                    {/* Div 4 - Diagonal Breathing (up-left/down-right) */}
-                    <div className="absolute w-[518px] h-[385.38px] mt-[30%] fi2 rounded-full animate-breathe-diagonal-ul-dr delay-6"></div>
-                    {/* Div 1 - Up/Down Breathing */}
-                    <div className="absolute w-[648.6px] h-[500px] ml-[22%] mt-[20%] fi rounded-full animate-breathe-diagonal-ur-dl delay-1"></div>
-                    <div className="absolute w-[1200.53px] h-[1300.69px]  fi3 rounded-full animate-breathe-up-down delay-2"></div>
-                    {/* Div 2 - Diagonal Breathing (up-right/down-left) */}
-
-                    {/* Div 3 - Up/Down Breathing */}
-
-                </div>
+                    <div className="flex space-x-4">
+                        <button
+                            type="button"
+                            onClick={() => router.push("/register")}
+                            className="w-1/2 p-3 text-green-500 rounded-[16px]"
+                        >
+                            Восстановить пароль
+                        </button>
+                        <button
+                            type="submit"
+                            className="w-1/2 p-3 text-green-500 rounded-[16px]"
+                        >
+                            Регистрация
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     );

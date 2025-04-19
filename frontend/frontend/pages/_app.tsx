@@ -2,62 +2,67 @@ import "../styles/globals.css";
 import { AppProps } from "next/app";
 import Header from "../components/Header";
 import { User } from "../lib/types";
-import { isAuthenticated, parseCookies } from "../lib/auth";
+import { getCookies } from "../lib/auth";
 import api from "../lib/api";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }: AppProps & { currentUser?: User }) {
     const router = useRouter();
-    const isLoginPage = router.pathname === "/"; // Исправленная проверка
-
-    console.log("Rendering Component:", Component); // Отладка для диагностики
-
-    if (isLoginPage) {
-        return <Component {...pageProps} />;
-    }
-
     const initialCurrentUser = (pageProps as { currentUser?: User }).currentUser;
     const [isAuthChecked, setIsAuthChecked] = useState(false);
     const [currentUser, setCurrentUser] = useState<User | null>(initialCurrentUser || null);
 
+    // Список страниц, доступных без авторизации
+    const publicPages = ["/", "/login", "/register"];
+
     useEffect(() => {
         if (typeof window !== "undefined") {
-            const cookies = parseCookies();
+            const cookies = getCookies();
             const token = cookies._token;
+
             if (token && !currentUser) {
                 api.get<User>("/users/me", {
                     headers: { Authorization: `Bearer ${token}` },
                 })
                     .then((response) => {
                         setCurrentUser(response.data);
-                        router.push("/welcome");
+                        if (router.pathname === "/") {
+                            console.log("User authenticated, redirecting to /welcome");
+                            router.push("/welcome");
+                        }
                     })
                     .catch((error) => {
                         console.error("Error fetching user on client:", error);
                         setCurrentUser(null);
-                        router.push("/");
+                        // Перенаправляем на главную, только если текущая страница не публичная
+                        if (!publicPages.includes(router.pathname)) {
+                            console.log("User not authenticated, redirecting to /");
+                            router.push("/");
+                        }
                     })
                     .finally(() => setIsAuthChecked(true));
-            } else if (token) {
-                setCurrentUser(initialCurrentUser || null);
+            } else if (token && currentUser) {
                 setIsAuthChecked(true);
-                router.push("/welcome");
+                if (router.pathname === "/") {
+                    console.log("User authenticated (token exists), redirecting to /welcome");
+                    router.push("/welcome");
+                }
             } else {
                 setIsAuthChecked(true);
-                router.push("/");
+                // Перенаправляем на главную, только если текущая страница не публичная
+                if (!publicPages.includes(router.pathname)) {
+                    console.log("No token, redirecting to /");
+                    router.push("/");
+                }
             }
         } else {
             setIsAuthChecked(true);
         }
-    }, []);
+    }, [router.pathname, currentUser]);
 
     if (!isAuthChecked) {
         return <div>Loading...</div>;
-    }
-
-    if (!currentUser) {
-        return <Component {...pageProps} />;
     }
 
     return (
