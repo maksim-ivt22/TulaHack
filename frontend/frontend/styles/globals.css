@@ -6,6 +6,15 @@
   font-style: normal;
 }
 
+@media (max-width: 640px) {
+  .mon {
+    font-family: "Montserrat Alternates", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 24px !important;
+  }
+}
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
