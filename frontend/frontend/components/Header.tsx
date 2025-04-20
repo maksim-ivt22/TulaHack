@@ -73,9 +73,9 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
     const links = [
         { name: "Заявки", path: currentUser ? "/user/requests" : "/requests" },
         { name: "Обсуждения", path: currentUser ? "/user/pow-wow" : "/pow-wow" },
-        { name: "Пожертвования", path: currentUser ? "/user/donations" : "/donations" },
-        { name: "О платформе", path: currentUser ? "/user/about" : "/about" },
-        { name: "База знаний", path: currentUser ? "/user/knowledge-base" : "/knowledge-base" },
+        { name: "Пожертвования", path: currentUser ? "/user/donations" : "/mony" },
+        { name: "О платформе", path: currentUser ? "/user/abouw" : "/abouw" },
+        { name: "База знаний", path: currentUser ? "/user/KnowledgeBasew" : "/KnowledgeBasew" },
     ];
 
     return (

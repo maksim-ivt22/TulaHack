@@ -44,6 +44,13 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
         //     router.push("/register");
         // }
     };
+    const handlee2Click = () => {
+        // if (currentUser) {
+            router.push("/requests");
+        // } else {
+        //     router.push("/register");
+        // }
+    };
 
     return (
         <div className="min-h-screen bg-[#F8F8F8]">
@@ -61,7 +68,10 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
                     </button>
                 </div>
                 <div className="bg-[#F5F5F5] h-[428px] md:h-[855px] flex items-center w-full md:w-[50%]">
-                    <button className="bg-[#088B64] text-white px-4 py-2 md:px-6 md:py-4 rounded-[16px] text-base md:text-[18px] hover:bg-green-600 mx-auto">
+                    <button 
+                        type="button"
+                        onClick={handlee2Click}
+                        className="bg-[#088B64] text-white px-4 py-2 md:px-6 md:py-4 rounded-[16px] text-base md:text-[18px] hover:bg-green-600 mx-auto">
                         Я помогу
                     </button>
                 </div>
