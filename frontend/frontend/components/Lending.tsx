@@ -1,11 +1,13 @@
 import Header from "./Header";
 import { User } from "../lib/types";
+import { useRouter } from "next/router";
 
 interface LendingProps {
     currentUser: User | null;
 }
 
 const Lending: React.FC<LendingProps> = ({ currentUser }) => {
+    const router = useRouter();
     const stats = [
         { value: ">100", label: "Волонтеров" },
         { value: ">100", label: "Заявок" },
@@ -28,6 +30,21 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
         { questions: "Вопрос" },
     ];
 
+    const handleButtonClick = () => {
+        if (currentUser) {
+            router.push("/requestm");
+        } else {
+            router.push("/register");
+        }
+    };
+    const handleeClick = () => {
+        // if (currentUser) {
+            router.push("/helpform");
+        // } else {
+        //     router.push("/register");
+        // }
+    };
+
     return (
         <div className="min-h-screen bg-[#F8F8F8]">
             {/* Header */}
@@ -36,7 +53,10 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
             {/* Hero Section */}
             <section className="py-2 flex flex-col md:flex-row">
                 <div className="bg-[#D9D9D9] h-[428px] md:h-[855px] flex items-center w-full md:w-[50%]">
-                    <button className="bg-[#088B64] text-white px-4 py-2 md:px-6 md:py-4 rounded-[16px] text-base md:text-[18px] hover:bg-green-600 mx-auto">
+                    <button 
+                        type="button"
+                        onClick={handleeClick}
+                        className="bg-[#088B64] text-white px-4 py-2 md:px-6 md:py-4 rounded-[16px] text-base md:text-[18px] hover:bg-green-600 mx-auto">
                         Мне нужна помощь
                     </button>
                 </div>
@@ -89,7 +109,10 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
                                             <span>{request.status2}</span>
                                         </div>
                                     </div>
-                                    <button className="bg-[#5DBA32] w-full text-white px-4 py-2 md:py-3 rounded-[12px] hover:bg-green-600">
+                                    <button 
+                                        type="button"
+                                        onClick={handleButtonClick}
+                                        className="bg-[#5DBA32] w-full text-white px-4 py-2 md:py-3 rounded-[12px] hover:bg-green-600">
                                         {request.action}
                                     </button>
                                 </div>
@@ -97,7 +120,9 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
                         ))}
                     </div>
                     <div className="flex py-12 md:py-24">
-                        <button className="bg-[#5DBA32] w-[50%] md:w-[13%] text-white px-4 py-2 md:py-3 text-base md:text-[18px] mx-auto rounded-[12px] hover:bg-green-600">
+                        <button 
+                            onClick={() => router.push("/requests")}
+                            className="bg-[#5DBA32] w-[50%] md:w-[13%] text-white px-4 py-2 md:py-3 text-base md:text-[18px] mx-auto rounded-[12px] hover:bg-green-600">
                             Все заявки
                         </button>
                     </div>

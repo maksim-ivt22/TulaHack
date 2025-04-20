@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 const AuthForm: React.FC = () => {
     const router = useRouter();
-    const [phone, setPhone] = useState("");
+    const [phone, setPhone] = useState("+7");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [password, setPassword] = useState("");
@@ -11,10 +11,11 @@ const AuthForm: React.FC = () => {
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [isAgreed, setIsAgreed] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
-
+    const [error, setError] = useState("");
 
     const toggleStatus = (newStatus: string) => {
         setStatus(newStatus);
+        setError("");
     };
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,18 +32,59 @@ const AuthForm: React.FC = () => {
         }
 
         if (value.length > 2) {
-            const digits = value.slice(2); 
+            const digits = value.slice(2);
             if (/^\d*$/.test(digits)) {
                 setPhone(value);
+                setError(""); 
             }
         } else {
             setPhone("+7");
         }
     };
 
-    // сделай логику ну тут самое главное
+    const handleFirstNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setFirstName(e.target.value);
+        setError("");
+    };
+
+    const handleLastNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLastName(e.target.value);
+        setError("");
+    };
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+        setError("");
+    };
+
+    const handleStatusChange = (newStatus: string) => {
+        setStatus(newStatus);
+        setError("");
+    };
+
+    const handleAgreedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setIsAgreed(e.target.checked);
+        setError("");
+    };
+
+    const isFormFilled =
+        phone.length === 12 && 
+        firstName.length > 0 &&
+        lastName.length > 0 &&
+        password.length >= 6 && 
+        status !== "" &&
+        isAgreed; 
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        if (!isFormFilled) {
+            setError(
+                "Пожалуйста, заполните все поля корректно (пароль должен содержать минимум 6 символов, выберите статус и согласитесь с условиями)"
+            );
+            return;
+        }
+
+        setError("");
         console.log("Registration data:", { phone, firstName, lastName, password, status, isSubscribed, isAgreed });
         setShowSuccess(true);
         setTimeout(() => {
@@ -60,7 +102,7 @@ const AuthForm: React.FC = () => {
                         </svg>
                     </div>
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Успешно!</h2>
-                    <p className="text-sm text-gray-600\">Перейти на главную</p>
+                    <p className="text-sm text-gray-600">Перейти на главную</p>
                 </div>
             </div>
         );
@@ -73,7 +115,7 @@ const AuthForm: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <input
-                            type="string"
+                            type="text" // Исправил type="string" на type="text"
                             placeholder="Номер телефона"
                             value={phone}
                             onChange={handlePhoneChange}
@@ -86,7 +128,7 @@ const AuthForm: React.FC = () => {
                             type="text"
                             placeholder="Имя"
                             value={firstName}
-                            onChange={(e) => setFirstName(e.target.value)}
+                            onChange={handleFirstNameChange}
                             className="w-full p-3 bg-[#F8F8F8] rounded-[16px] text-[#999DA6] focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
@@ -94,8 +136,8 @@ const AuthForm: React.FC = () => {
                             type="text"
                             placeholder="Фамилия"
                             value={lastName}
-                            onChange={(e) => setLastName(e.target.value)}
-                            className="w-full p-3 bg-[#F8F8F8] rounded-[16px] text-[#999DA6] focus:outline-none focus:ring-2 focus:ring-green-500   "
+                            onChange={handleLastNameChange}
+                            className="w-full p-3 bg-[#F8F8F8] rounded-[16px] text-[#999DA6] focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
                     </div>
@@ -104,33 +146,46 @@ const AuthForm: React.FC = () => {
                             type="password"
                             placeholder="Придумайте пароль"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={handlePasswordChange}
                             className="w-full p-3 bg-[#F8F8F8] rounded-[16px] text-[#999DA6] focus:outline-none focus:ring-2 focus:ring-green-500"
                             required
                         />
                     </div>
-                    <div className="flex bg-[#F8F8F8] rounded-[16px] p-1 text-black">
-                        <div
-                            className={`flex-1 p-3 rounded-[12px] text-center cursor-pointer transition-colors duration-300 ${
-                                status === "volonter" ? "bg-[#FFFFFF]" : "bg-transparent"
-                            }`}
-                            onClick={() => toggleStatus("volonter")}
-                        >
-                            Волонтер
+                    <div className="relative">
+                        <div className="flex bg-[#F8F8F8] rounded-[16px] p-1 text-black">
+                            <div
+                                className={`flex-1 p-3 rounded-[12px] text-center cursor-pointer transition-colors duration-300 ${
+                                    status === "volonter" ? "bg-[#FFFFFF]" : "bg-transparent"
+                                } ${!status && error ? "border-2 border-red-500" : ""}`}
+                                onClick={() => toggleStatus("volonter")}
+                            >
+                                Волонтер
+                            </div>
+                            <div
+                                className={`flex-1 p-3 rounded-[12px] text-center cursor-pointer transition-colors duration-300 ${
+                                    status === "veteran" ? "bg-[#FFFFFF]" : "bg-transparent"
+                                } ${!status && error ? "border-2 border-red-500" : ""}`}
+                                onClick={() => toggleStatus("veteran")}
+                            >
+                                Ветеран/Родственник
+                            </div>
                         </div>
-                        <div
-                            className={`flex-1 p-3 rounded-[12px] text-center cursor-pointer transition-colors duration-300 ${
-                                status === "veteran" ? "bg-[#FFFFFF]" : "bg-transparent"
-                            }`}
-                            onClick={() => toggleStatus("veteran")}
-                        >
-                            Ветеран/Родственник
-                        </div>
+                        {/* Подсказка об обязательности */}
+                        <p className="text-xs text-gray-500 mt-1">* Выбор статуса обязателен</p>
                     </div>
+                    {/* Сообщение об ошибке */}
+                    {error && (
+                        <p className="text-red-500 text-sm text-center">{error}</p>
+                    )}
                     <div className="flex space-x-4">
                         <button
                             type="submit"
-                            className="w-full p-3 bg-[#F8F8F8] text-[#999DA6] rounded-[16px] hover:bg-gray-200"
+                            className={`w-full p-3 rounded-[16px] transition-all duration-300 transform ${
+                                isFormFilled
+                                    ? "bg-[#5DBA32] text-white hover:bg-green-600"
+                                    : "bg-[#F8F8F8] text-[#999DA6] hover:bg-gray-200"
+                            }`}
+                            aria-disabled={!isFormFilled}
                         >
                             Зарегистрироваться
                         </button>
@@ -141,6 +196,7 @@ const AuthForm: React.FC = () => {
                             checked={isSubscribed}
                             onChange={(e) => setIsSubscribed(e.target.checked)}
                             className="custom-checkbox"
+                            required
                         />
                         <label className="text-sm text-gray-600 flex items-center">
                             Согласен на обработку персональных данных
@@ -150,7 +206,7 @@ const AuthForm: React.FC = () => {
                         <input
                             type="checkbox"
                             checked={isAgreed}
-                            onChange={(e) => setIsAgreed(e.target.checked)}
+                            onChange={handleAgreedChange}
                             className="custom-checkbox"
                             required
                         />
