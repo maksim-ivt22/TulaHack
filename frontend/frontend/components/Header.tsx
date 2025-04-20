@@ -9,7 +9,6 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ currentUser }) => {
     const router = useRouter();
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const handleDashboardClick = () => {
@@ -19,7 +18,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
 
     const handleProfileClick = () => {
         if (currentUser) {
-            setIsModalOpen(true);
+            router.push("/profile");
         } else {
             console.warn("Cannot open profile: user not authenticated");
         }
@@ -47,7 +46,6 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
         } else {
             console.warn("Cannot logout: user not authenticated");
         }
-        setIsModalOpen(false);
         setIsMenuOpen(false);
     };
 
@@ -67,14 +65,6 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
         setIsMenuOpen(false);
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
-
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -82,7 +72,7 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
     // Определяем маршруты в зависимости от авторизации
     const links = [
         { name: "Заявки", path: currentUser ? "/user/requests" : "/requests" },
-        { name: "Обсуждения", path: currentUser ? "/user/discussions" : "/discussions" },
+        { name: "Обсуждения", path: currentUser ? "/user/pow-wow" : "/pow-wow" },
         { name: "Пожертвования", path: currentUser ? "/user/donations" : "/donations" },
         { name: "О платформе", path: currentUser ? "/user/about" : "/about" },
         { name: "База знаний", path: currentUser ? "/user/knowledge-base" : "/knowledge-base" },
@@ -116,12 +106,17 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
                 <div className="hidden lg:flex items-center space-x-4">
                     <div className="space-x-2 md:space-x-4 flex items-center">
                         {currentUser ? (
-                            <button
-                                onClick={handleProfileClick}
-                                className="h-[40px] w-[150px] md:w-[180px] text-base md:text-xl hover:bg-gray-100 rounded-[12px]"
-                            >
-                                Учетная запись
-                            </button>
+                            <>
+                                <button
+                                    onClick={handleProfileClick}
+                                    className="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center hover:bg-gray-300"
+                                    aria-label="Перейти в профиль"
+                                >
+                                    <span className="text-base md:text-lg font-medium text-gray-700">
+                                        {currentUser.full_name.charAt(0).toUpperCase()}
+                                    </span>
+                                </button>
+                            </>
                         ) : (
                             <>
                                 <button
@@ -143,24 +138,32 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
             </div>
 
             {isMenuOpen && (
-                <div className="lx:hidden bg-white shadow-lg mt-2 p-4 rounded-lg">
+                <div className="lg:hidden bg-white shadow-lg mt-2 p-4 rounded-lg">
                     <div className="flex flex-col space-y-2">
                         {links.map((link) => (
                             <button
                                 key={link.name}
                                 onClick={() => handleLinkClick(link.path)}
-                                className="text-base  p-2 rounded text-black hover:[#9E9E9E] text-center"
+                                className="text-base p-2 rounded text-black hover:text-[#9E9E9E] text-center"
                             >
                                 {link.name}
                             </button>
                         ))}
                         {currentUser ? (
-                            <button
-                                onClick={handleProfileClick}
-                                className="text-base text-left p-2 rounded hover:bg-gray-100"
-                            >
-                                Учетная запись
-                            </button>
+                            <>
+                                <button
+                                    onClick={handleProfileClick}
+                                    className="text-base text-left p-2 rounded hover:bg-gray-100"
+                                >
+                                    Профиль
+                                </button>
+                                <button
+                                    onClick={handleLogout}
+                                    className="text-base text-left p-2 rounded text-red-500 hover:bg-gray-100"
+                                >
+                                    Выйти
+                                </button>
+                            </>
                         ) : (
                             <>
                                 <button
@@ -177,66 +180,6 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
                                 </button>
                             </>
                         )}
-                    </div>
-                </div>
-            )}
-
-            {isModalOpen && currentUser && (
-                <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                    onClick={closeModal}
-                >
-                    <div
-                        className="bg-white p-4 md:p-20 rounded-[20px] md:rounded-[40px] shadow-lg w-[90%] md:w-[50%] max-h-[90vh] md:h-[60vh] overflow-y-auto"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button
-                            onClick={closeModal}
-                            className="absolute top-2 right-4 md:right-16 mt-4 md:mt-16 text-black hover:text-gray-700 text-xl md:text-2xl font-bold"
-                        >
-                            ×
-                        </button>
-                        <h2 className="text-xl md:text-3xl font-bold mb-4 mon">Профиль</h2>
-                        <div className="h-auto md:h-[40%] w-full md:w-[80%] mx-auto p-4 md:p-10 flex flex-col md:flex-row">
-                            <div className="h-[100px] md:h-[100%] w-full md:w-2/3 mb-4 md:mb-0"></div>
-                            <div className="h-auto md:h-full w-full md:w-1/3 flex">
-                                <button
-                                    onClick={handleLogout}
-                                    className="rounded-full border-2 h-8 md:h-10 w-16 md:w-20 bg-red-400 text-base md:text-xl ml-auto"
-                                >
-                                    Выйти
-                                </button>
-                            </div>
-                        </div>
-                        <div className="h-auto md:h-[55%] w-full border-2 border-black rounded-[20px] p-4 md:p-16 flex flex-col md:flex-row relative">
-                            <p className="text-xl md:text-3xl font-bold absolute -top-10 md:mt-[-50px] mon">
-                                Персональная информация
-                            </p>
-                            <div className="w-full md:w-1/3 mb-4 md:mb-0">
-                                <p className="text-gray-400 text-base md:text-xl">Имя:</p>
-                                <p className="text-base md:text-xl">{currentUser.full_name}</p>
-                                <p className="text-gray-400 text-base md:text-xl mt-2 md:mt-5">Номер телефона:</p>
-                                <p className="text-base md:text-xl">{currentUser.phone_number || "N/A"}</p>
-                                <p className="text-gray-400 text-base md:text-xl mt-4 md:mt-10">Телеграм:</p>
-                                <p className="text-base md:text-xl">{currentUser.full_name}</p>
-                            </div>
-                            <div className="w-full md:w-1/3 mb-4 md:mb-0">
-                                <p className="text-gray-400 text-base md:text-xl">Фамилия:</p>
-                                <p className="text-base md:text-xl">{currentUser.full_name}</p>
-                                <p className="text-gray-400 text-base md:text-xl mt-2 md:mt-5">Email:</p>
-                                <p className="text-base md:text-xl">{currentUser.email}</p>
-                                <p className="text-gray-400 text-base md:text-xl mt-4 md:mt-10">Подразделение:</p>
-                                <p className="text-base md:text-xl">{currentUser.full_name}</p>
-                            </div>
-                            <div className="w-full md:w-1/3">
-                                <p className="text-gray-400 text-base md:text-xl">Отчество:</p>
-                                <p className="text-base md:text-xl">{currentUser.full_name}</p>
-                                <p className="text-gray-400 text-base md:text-xl mt-2 md:mt-5">Корп. Email:</p>
-                                <p className="text-base md:text-xl">{currentUser.full_name}</p>
-                                <p className="text-gray-400 text-base md:text-xl mt-4 md:mt-10">Должность:</p>
-                                <p className="text-base md:text-xl">{currentUser.role}</p>
-                            </div>
-                        </div>
                     </div>
                 </div>
             )}

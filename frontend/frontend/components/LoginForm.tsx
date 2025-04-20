@@ -3,14 +3,20 @@ import { useRouter } from "next/router";
 
 const LoginForm: React.FC = () => {
     const router = useRouter();
-    const [phone, setPhone] = useState("");
+    const [phone, setPhone] = useState("+7");
     const [password, setPassword] = useState("");
     const [showSuccess, setShowSuccess] = useState(false);
+    const [error, setError] = useState(""); // Для отображения сообщения об ошибке
 
-    // сделай логику ну тут самое главное 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!isFormFilled) {
+            setError("Пожалуйста, заполните все поля корректно");
+            return;
+        }
+
+        setError("");
         console.log("Login data:", { phone, password });
         setShowSuccess(true);
 
@@ -33,7 +39,7 @@ const LoginForm: React.FC = () => {
         }
 
         if (value.length > 2) {
-            const digits = value.slice(2); 
+            const digits = value.slice(2);
             if (/^\d*$/.test(digits)) {
                 setPhone(value);
             }
@@ -41,6 +47,8 @@ const LoginForm: React.FC = () => {
             setPhone("+7");
         }
     };
+
+    const isFormFilled = phone.length === 12;
 
     if (showSuccess) {
         return (
@@ -52,7 +60,7 @@ const LoginForm: React.FC = () => {
                         </svg>
                     </div>
                     <h2 className="text-xl font-bold text-gray-800 mb-2">Успешно!</h2>
-                    <p className="text-sm text-gray-600\">Перейти на главную</p>
+                    <p className="text-sm text-gray-600">Перейти на главную</p>
                 </div>
             </div>
         );
@@ -65,7 +73,7 @@ const LoginForm: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
                         <input
-                            type="string"
+                            type="text"
                             placeholder="Номер телефона"
                             value={phone}
                             onChange={handlePhoneChange}
@@ -83,9 +91,20 @@ const LoginForm: React.FC = () => {
                             required
                         />
                     </div>
+
+                    {/* Сообщение об ошибке */}
+                    {error && (
+                        <p className="text-red-500 text-sm text-center">{error}</p>
+                    )}
+
                     <button
                         type="submit"
-                        className="w-full p-3 bg-[#F8F8F8] text-[#999DA6] rounded-[16px] hover:bg-gray-200"
+                        className={`w-full p-3 rounded-[16px] transition-all duration-300 transform ${
+                            isFormFilled
+                                ? "bg-[#5DBA32] text-white hover:bg-green-600"
+                                : "bg-[#F8F8F8] text-[#999DA6] hover:bg-gray-200"
+                        }`}
+                        aria-disabled={!isFormFilled}
                     >
                         Войти
                     </button>

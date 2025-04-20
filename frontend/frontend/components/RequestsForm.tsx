@@ -1,11 +1,15 @@
-import Header from "./Header";
+import { useRouter } from "next/router";
 import { User } from "../lib/types";
+import { logout } from "../lib/auth";
+import { useState } from "react";
 
 interface LendingProps {
+    request: { action: string };
     currentUser: User | null;
 }
 
 const RequestsForm: React.FC<LendingProps> = ({ currentUser }) => {
+    const router = useRouter();
     const requests = [
         { date: "10 апреля, 12:00", status: "в радиусе 1км", status2: "в радиусе 1км", action: "Я помогу" },
         { date: "10 апреля, 12:00", status: "в радиусе 1км", status2: "в радиусе 1км", action: "Я помогу" },
@@ -19,9 +23,16 @@ const RequestsForm: React.FC<LendingProps> = ({ currentUser }) => {
         { date: "10 апреля, 12:00", status: "в радиусе 1км", status2: "в радиусе 1км", action: "Я помогу" },
         { date: "10 апреля, 12:00", status: "в радиусе 1км", status2: "в радиусе 1км", action: "Я помогу" },
         { date: "10 апреля, 12:00", status: "в радиусе 1км", status2: "в радиусе 1км", action: "Я помогу" },
-        
     ];
 
+    const handleButtonClick = () => {
+        // if (currentUser) {
+            router.push("/requestm");
+        // } else {
+        //     router.push("/register");
+        // }
+    };
+    
     return (
         <div className="min-h-screen bg-[#F8F8F8]">
             {/* Requests Name */}
@@ -58,7 +69,11 @@ const RequestsForm: React.FC<LendingProps> = ({ currentUser }) => {
                                             <span>{request.status2}</span>
                                         </div>
                                     </div>
-                                    <button className="bg-[#5DBA32] w-full text-white px-4 py-2 md:py-3 rounded-[12px] hover:bg-green-600">
+                                    <button
+                                        type="button"
+                                        onClick={handleButtonClick}
+                                        className="bg-[#5DBA32] w-full text-white px-4 py-2 md:py-3 rounded-[12px] hover:bg-green-600"
+                                    >
                                         {request.action}
                                     </button>
                                 </div>

@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps & { currentUser?: User }) {
     const [currentUser, setCurrentUser] = useState<User | null>(initialCurrentUser || null);
 
     // Список страниц, доступных без авторизации
-    const publicPages = ["/", "/login", "/register", "/requests"];
+    const publicPages = ["/", "/login", "/register", "/requests", "/requestm", "/pow-wow", "/helpform", "/Profilei"];
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps & { currentUser?: User }) {
                     console.log("User authenticated (token exists), redirecting to /welcome");
                     router.push("/welcome");
                 }
-            } else {
+            } else {    
                 setIsAuthChecked(true);
                 // Перенаправляем на главную, только если текущая страница не публичная
                 if (!publicPages.includes(router.pathname)) {
