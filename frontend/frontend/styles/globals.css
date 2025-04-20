@@ -88,9 +88,20 @@ body {
       transform: translate(10px, 10px);
   }
 }
+.mou{
+  background-image: url(../public/Frame\ 1492873325.svg);
+  background-size: cover;
 
+}
+.mop{
+  background-image: url(../public/Mail.svg);
+  background-size: cover;
+}
+.moi{
+  background-image: url(../public/Phone.svg);
+  background-size: cover;
 
-
+}
 
 
 

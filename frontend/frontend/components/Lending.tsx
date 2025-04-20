@@ -68,10 +68,14 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
             <section className="py-12 px-4 md:px-24">
                 <div className="mx-auto">
                     <h2 className="text-2xl md:text-[36px] font-bold text-center mb-12 md:mb-24 mon">Заявки</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
                         {requests.map((request, index) => (
                             <div key={index} className="bg-white rounded-[32px]">
-                                <div className="bg-gray-200 h-[200px] md:h-[312px] rounded-t-[32px] mb-4"></div>
+                                <div className="bg-gray-200 h-[100px] md:h-[212px] rounded-t-[32px] mb-4 flex">
+                                    <div className="mt-[8%] ml-[6%] md:h-[15%] w-[20%] h-[25%] md:w-[30%] bg-[#FFD5D5] rounded-[8px] flex">
+                                        <p className="text-[#DF2121] text-lg md:text-[18px] my-auto mx-auto">Срочно</p>
+                                    </div>
+                                </div>
                                 <div className="p-4 md:p-5 text-base md:text-[18px]">
                                     <p className="mb-2 text-lg md:text-[24px] font-medium">Помощь с переездом</p>
                                     <p className="mb-2">{request.date}</p>
@@ -85,7 +89,7 @@ const Lending: React.FC<LendingProps> = ({ currentUser }) => {
                                             <span>{request.status2}</span>
                                         </div>
                                     </div>
-                                    <button className="bg-[#5DBA32] w-full md:w-[45%] text-white px-4 py-2 md:py-3 rounded-[12px] hover:bg-green-600">
+                                    <button className="bg-[#5DBA32] w-full text-white px-4 py-2 md:py-3 rounded-[12px] hover:bg-green-600">
                                         {request.action}
                                     </button>
                                 </div>

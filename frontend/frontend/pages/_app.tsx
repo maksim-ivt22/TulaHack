@@ -6,6 +6,7 @@ import { getCookies } from "../lib/auth";
 import api from "../lib/api";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import Footer from "../components/Footer";
 
 function MyApp({ Component, pageProps }: AppProps & { currentUser?: User }) {
     const router = useRouter();
@@ -14,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps & { currentUser?: User }) {
     const [currentUser, setCurrentUser] = useState<User | null>(initialCurrentUser || null);
 
     // Список страниц, доступных без авторизации
-    const publicPages = ["/", "/login", "/register"];
+    const publicPages = ["/", "/login", "/register", "/requests"];
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -71,6 +72,7 @@ function MyApp({ Component, pageProps }: AppProps & { currentUser?: User }) {
             <main>
                 <Component {...pageProps} currentUser={currentUser} />
             </main>
+            <Footer currentUser={currentUser} />
         </div>
     );
 }
