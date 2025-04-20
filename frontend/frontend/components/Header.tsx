@@ -62,6 +62,11 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
         setIsMenuOpen(false);
     };
 
+    const handleLinkClick = (path: string) => {
+        router.push(path);
+        setIsMenuOpen(false);
+    };
+
     const openModal = () => {
         setIsModalOpen(true);
     };
@@ -74,6 +79,15 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
         setIsMenuOpen(!isMenuOpen);
     };
 
+    // Определяем маршруты в зависимости от авторизации
+    const links = [
+        { name: "Заявки", path: currentUser ? "/user/requests" : "/requests" },
+        { name: "Обсуждения", path: currentUser ? "/user/discussions" : "/discussions" },
+        { name: "Пожертвования", path: currentUser ? "/user/donations" : "/donations" },
+        { name: "О платформе", path: currentUser ? "/user/about" : "/about" },
+        { name: "База знаний", path: currentUser ? "/user/knowledge-base" : "/knowledge-base" },
+    ];
+
     return (
         <header className="text-black p-2 md:p-4 bg-[#FFFFFF]">
             <div className="container mx-auto flex items-center justify-between">
@@ -81,31 +95,25 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
                     <span className="text-lg md:text-[24px] font-bold mon">ПомощьРядом</span>
                 </div>
 
-                <div className="md:hidden">
+                <div className="hidden lg:flex space-x-4">
+                    {links.map((link) => (
+                        <button
+                            key={link.name}
+                            onClick={() => handleLinkClick(link.path)}
+                            className="text-base md:text-[18px] text-black hover:text-[#9E9E9E]"
+                        >
+                            {link.name}
+                        </button>
+                    ))}
+                </div>
+
+                <div className="lg:hidden">
                     <button onClick={toggleMenu} className="text-2xl focus:outline-none">
                         {isMenuOpen ? "✕" : "☰"}
                     </button>
                 </div>
 
-                <div className="hidden md:flex items-center space-x-4">
-                    {currentUser && (
-                        <>
-                            {currentUser.role === "admin" && (
-                                <button
-                                    onClick={handleMailClick}
-                                    className="p-2 rounded text-lg md:text-xl hover:bg-gray-100"
-                                >
-                                    Создать аккаунт сотрудника
-                                </button>
-                            )}
-                            <button
-                                onClick={handleDashboardClick}
-                                className="p-2 rounded text-lg md:text-xl hover:bg-gray-100"
-                            >
-                                Список сотрудника
-                            </button>
-                        </>
-                    )}
+                <div className="hidden lg:flex items-center space-x-4">
                     <div className="space-x-2 md:space-x-4 flex items-center">
                         {currentUser ? (
                             <button
@@ -135,26 +143,17 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
             </div>
 
             {isMenuOpen && (
-                <div className="md:hidden bg-white shadow-lg mt-2 p-4 rounded-lg">
+                <div className="lx:hidden bg-white shadow-lg mt-2 p-4 rounded-lg">
                     <div className="flex flex-col space-y-2">
-                        {currentUser && (
-                            <>
-                                {currentUser.role === "admin" && (
-                                    <button
-                                        onClick={handleMailClick}
-                                        className="text-base text-left p-2 rounded hover:bg-gray-100"
-                                    >
-                                        Создать аккаунт сотрудника
-                                    </button>
-                                )}
-                                <button
-                                    onClick={handleDashboardClick}
-                                    className="text-base text-left p-2 rounded hover:bg-gray-100"
-                                >
-                                    Список сотрудника
-                                    </button>
-                            </>
-                        )}
+                        {links.map((link) => (
+                            <button
+                                key={link.name}
+                                onClick={() => handleLinkClick(link.path)}
+                                className="text-base  p-2 rounded text-black hover:[#9E9E9E] text-center"
+                            >
+                                {link.name}
+                            </button>
+                        ))}
                         {currentUser ? (
                             <button
                                 onClick={handleProfileClick}
@@ -165,16 +164,16 @@ const Header: React.FC<HeaderProps> = ({ currentUser }) => {
                         ) : (
                             <>
                                 <button
+                                    onClick={handleRegisterClick}
+                                    className="text-base bg-[#5DBA32] w-[45%] mx-auto text-white p-2 rounded-[12px] hover:bg-green-600"
+                                >
+                                    Регистрация
+                                </button>
+                                <button
                                     onClick={handleLoginClick}
                                     className="text-base text-[#5DBA32] p-2 rounded hover:bg-gray-100"
                                 >
                                     Вход
-                                </button>
-                                <button
-                                    onClick={handleRegisterClick}
-                                    className="text-base bg-[#5DBA32] text-white p-2 rounded hover:bg-green-600"
-                                >
-                                    Регистрация
                                 </button>
                             </>
                         )}

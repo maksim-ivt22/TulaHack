@@ -8,7 +8,7 @@ const SuccessMessage: React.FC = () => {
         // Перенаправление на главную через 2 секунды
         const timer = setTimeout(() => {
             router.push("/");
-        }, 2000);
+        }, 1000000);
         return () => clearTimeout(timer);
     }, [router]);
 
