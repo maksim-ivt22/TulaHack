@@ -10,7 +10,7 @@ const Footer = () => {
     const links = [
         { name: "Заявки", path: "/requests" },
         { name: "Обсуждения", path: "/pow-wow" },
-        { name: "Пожертвования", path: "/donations" },
+        { name: "Пожертвования", path: "/mony" },
         { name: "О платформе", path: "/about" },
         { name: "База знаний", path: "/knowledge-base" },
     ];

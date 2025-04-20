@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps & { currentUser?: User }) {
     const [currentUser, setCurrentUser] = useState<User | null>(initialCurrentUser || null);
 
     // Список страниц, доступных без авторизации
-    const publicPages = ["/", "/login", "/register", "/requests", "/requestm", "/pow-wow", "/helpform", "/Profilei"];
+    const publicPages = ["/", "/login", "/register", "/requests", "/requestm", "/pow-wow", "/helpform", "/Profilei", "/mony", "/KnowledgeBasew", "/abouw"];
 
     useEffect(() => {
         if (typeof window !== "undefined") {
